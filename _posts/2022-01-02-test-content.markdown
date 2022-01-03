@@ -2,7 +2,7 @@
 layout: post
 title:  "My first Article"
 date:   2022-01-02 13:06:10 +0900
-categories: jekyll update
+categories: daily
 ---
 As my `first` step for becoming professional programmer, I decided to make a `github blog`.
 

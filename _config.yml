@@ -25,10 +25,10 @@ description: >- # this means to ignore newlines until "baseurl:"
 baseurl: "" # the subpath of your site, e.g. /blog
 url: "" # the base hostname & protocol for your site, e.g. http://example.com
 
-github_username:  wnwoghd22
+github_username: wnwoghd22
 #youtube_username: Jay
-#youtube_channel: UCt5yljKsv3adR8NV1nJqrlg
-#youtube: channel/UCt5yljKsv3adR8NV1nJqrlg
+youtube_channel: ["UCt5yljKsv3adR8NV1nJqrlg", "Jay"]
+instagram_username: jaehong202
 
 #footer-links:
 #  github: wnwoghd22/
