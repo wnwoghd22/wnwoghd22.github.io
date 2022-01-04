@@ -1,0 +1,9 @@
+<div class="sidebar">
+    <input type="checkbox" id="side_btn" class="side_input blind"/>
+    <label for="side_btn" class="side_toggle"></label>
+    <div class="side_list">
+        {% for category in site.categories %}
+            {%- include sidebar/element.html -%}
+        {% endfor %} 
+    </div>
+</div>

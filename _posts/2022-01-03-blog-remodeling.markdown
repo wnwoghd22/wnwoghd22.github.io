@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "블로그 새단장"
-date:   2022-01-02 13:06:10 +0900
+date:   2022-01-03 23:30:00 +0900
 categories: daily update
 ---
 

@@ -8,15 +8,7 @@
     {%- include header.html -%}
 
     <main class="page-content" aria-label="Content">
-      <div>
-        <input type="checkbox" id="side_btn" class="side_input blind"/>
-        <label for="side_btn" class="side_toggle"></label>
-        <div class="side_list">
-          <a href class="side_link">1</a>
-          <a href class="side_link">2</a>
-          <a href class="side_link">3</a>
-        </div>
-      </div>
+      {%- include sidebar/container.html -%}
       <div class="wrapper">
         {{ content }}
       </div>
