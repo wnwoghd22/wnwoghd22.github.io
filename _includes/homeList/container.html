@@ -1,3 +1,5 @@
+
+{%- if site.posts.size > 0 -%}
 <script>
     var index = 0;
 
@@ -22,25 +24,28 @@
     }
 </script>
 
-{%- if site.posts.size > 0 -%}
+    {% assign _page_length = 2 %}
     <h2 class="post-list-heading">{{ page.list_title | default: "Posts" }}</h2>
     <ul class="post-list">
         {%- for post in site.posts -%}
-            {{ forloop.index }}
-            {{ forloop.index | minus: 1 }}
-            {{ forloop.index | minus: 1 | modulo: 2 }}
-            {% assign _flag = forloop.index | minus: 1 | modulo: 2 %}
-            {% if _flag == 0 %}
-                {% assign _page_num = forloop.index | minus: 1 | divided_by: 2 %}
+            {% assign _tag = forloop.index | minus: 1 | modulo: _page_length %}
+            {% if _tag == 0 %}
+                {% assign _page_num = forloop.index | minus: 1 | divided_by: _page_length %}
                 {% capture page_id %}
                     page-{{ _page_num }}
                 {% endcapture %}
-                <div id = {{ page_id }} class='postpage'></div>
+                <div id = {{ page_id }} class='postpage'>
             {% endif %}
+
             {%- include homeList/element.html -%}
 
+            {% assign _close_tag = _page_length | minus: 1 %}
+            {% if forloop.last or _tag == _close_tag %}
+                </div>
+            {% endif %}
         {%- endfor -%}
     </ul>
     <span id="indexer" style="font-family: SAir; font-size: 15px; display: inline-block; width: 50px; text-align: center;"></span>
 
+<script> setIndex(0); </script>
 {%- endif -%}
