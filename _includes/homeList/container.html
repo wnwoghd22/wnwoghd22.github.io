@@ -1,0 +1,56 @@
+
+{%- if site.posts.size > 0 -%}
+<script>
+    var page_length = 2;
+    var index = 0;
+
+    setIndex = n => {
+        index = n;
+        let pages = document.getElementsByClassName('postpage');
+        for(let i = 0; i < pages.length; ++i) {
+            i != n ? pages[i].style.display = 'none' :  pages[i].style.display = 'block';
+        }
+
+        let postion = document.getElementById('indexer');
+        postion.innerText= String(index+1) + "/" + String(pages.length);
+
+    }
+    setIndexByElement = n => {
+        index = n;
+        let items = document.getElementsByClassName('post-item');
+
+        let page_num = Math.ceil(items.length / 2);
+
+        Array.from(items).forEach(element => {
+            element.style.display = 'none';
+        });
+
+        for(let i = n * page_length; i < Math.min((n + 1) * page_length, items.length); ++i) {
+            items[i].style.display = 'block';
+        }
+
+        let postion = document.getElementById('indexer');
+        postion.innerText= String(index+1) + "/" + String(page_num);
+    }
+
+    previousPage = () => {
+        if(index > 0) setIndex(index - 1);
+    }
+    nextPage = () => {
+        let pages = document.getElementsByClassName('postpage');
+        if(index < pages.length - 1) setIndex(index * 1 + 1);
+        window.scrollTo(0, 250);
+    }
+</script>
+    <h2 class="post-list-heading">{{ page.list_title | default: "Posts" }}</h2>
+    <ul class="post-list">
+        {%- for post in site.posts -%}
+
+            {%- include homeList/element.html -%}
+
+        {%- endfor -%}
+    </ul>
+    <span id="indexer" style="font-family: SAir; font-size: 15px; display: inline-block; width: 50px; text-align: center;"></span>
+
+<script> setIndexByElement(0); </script>
+{%- endif -%}
