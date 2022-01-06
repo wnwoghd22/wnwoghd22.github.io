@@ -4,19 +4,3 @@
 
 layout: home
 ---
-<div>
-    {% for category in site.categories %}
-    <p>
-    {% capture category_name %}{{ category | first }}{% endcapture %} 
-    {{ category_name }}
-    </p>
-    {% endfor %}
-</div>
-
-<ul>
-    {% for post in site.posts %}
-<li>
-    <a href="{{ post.url }}">{{ post.title }}</a>
-</li>
-    {% endfor %}
-</ul>

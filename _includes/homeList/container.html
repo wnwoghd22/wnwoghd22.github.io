@@ -1,0 +1,46 @@
+<script>
+    var index = 0;
+
+    setIndex = n => {
+        index = n;
+        let pages = document.getElementsByClassName('postpage');
+        for(let i = 0; i < pages.length; ++i) {
+            i != n ? pages[i].style.display = 'none' :  pages[i].style.display = 'block';
+        }
+
+        let postion = document.getElementById('indexer');
+        postion.innerText= String(index+1) + "/" + String(pages.length);
+
+    }
+    previousPage = () => {
+        if(index > 0) setIndex(index - 1);
+    }
+    nextPage = () => {
+        let pages = document.getElementsByClassName('postpage');
+        if(index < pages.length - 1) setIndex(index * 1 + 1);
+        window.scrollTo(0, 250);
+    }
+</script>
+
+{%- if site.posts.size > 0 -%}
+    <h2 class="post-list-heading">{{ page.list_title | default: "Posts" }}</h2>
+    <ul class="post-list">
+        {%- for post in site.posts -%}
+            {{ forloop.index }}
+            {{ forloop.index | minus: 1 }}
+            {{ forloop.index | minus: 1 | modulo: 2 }}
+            {% assign _flag = forloop.index | minus: 1 | modulo: 2 %}
+            {% if _flag == 0 %}
+                {% assign _page_num = forloop.index | minus: 1 | divided_by: 2 %}
+                {% capture page_id %}
+                    page-{{ _page_num }}
+                {% endcapture %}
+                <div id = {{ page_id }} class='postpage'></div>
+            {% endif %}
+            {%- include homeList/element.html -%}
+
+        {%- endfor -%}
+    </ul>
+    <span id="indexer" style="font-family: SAir; font-size: 15px; display: inline-block; width: 50px; text-align: center;"></span>
+
+{%- endif -%}
