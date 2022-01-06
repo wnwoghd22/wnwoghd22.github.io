@@ -1,6 +1,7 @@
 
 {%- if site.posts.size > 0 -%}
 <script>
+    var page_length = 2;
     var index = 0;
 
     setIndex = n => {
@@ -14,6 +15,24 @@
         postion.innerText= String(index+1) + "/" + String(pages.length);
 
     }
+    setIndexByElement = n => {
+        index = n;
+        let items = document.getElementsByClassName('post-item');
+
+        let page_num = Math.ceil(items.length / 2);
+
+        Array.from(items).forEach(element => {
+            element.style.display = 'none';
+        });
+
+        for(let i = n * page_length; i < Math.min((n + 1) * page_length, items.length); ++i) {
+            items[i].style.display = 'block';
+        }
+
+        let postion = document.getElementById('indexer');
+        postion.innerText= String(index+1) + "/" + String(page_num);
+    }
+
     previousPage = () => {
         if(index > 0) setIndex(index - 1);
     }
@@ -23,29 +42,15 @@
         window.scrollTo(0, 250);
     }
 </script>
-
-    {% assign _page_length = 2 %}
     <h2 class="post-list-heading">{{ page.list_title | default: "Posts" }}</h2>
     <ul class="post-list">
         {%- for post in site.posts -%}
-            {% assign _tag = forloop.index | minus: 1 | modulo: _page_length %}
-            {% if _tag == 0 %}
-                {% assign _page_num = forloop.index | minus: 1 | divided_by: _page_length %}
-                {% capture page_id %}
-                    page-{{ _page_num }}
-                {% endcapture %}
-                <div id = {{ page_id }} class='postpage'>
-            {% endif %}
 
             {%- include homeList/element.html -%}
 
-            {% assign _close_tag = _page_length | minus: 1 %}
-            {% if forloop.last or _tag == _close_tag %}
-                </div>
-            {% endif %}
         {%- endfor -%}
     </ul>
     <span id="indexer" style="font-family: SAir; font-size: 15px; display: inline-block; width: 50px; text-align: center;"></span>
 
-<script> setIndex(0); </script>
+<script> setIndexByElement(0); </script>
 {%- endif -%}
