@@ -1,66 +1,66 @@
 .sidebar {
-    //display: block;
-    //display: inline-block;
+  //display: block;
+  //display: inline-block;
 
-    float: left;
-    position: sticky;
-    height: auto;
-    top: 0;
-  }
-  
+  float: left;
+  position: sticky;
+  height: auto;
+  top: 0;
+}
 
-  .side_toggle::before {
-    content: ">";
-    display: inline-block;
-    //width: 50px;
-    width: 200px;
-    line-height: 50px;
-    font-size: 24px;
-    padding-right: 10px;
-    text-align: right;
-    //border-right: 1px solid #000;
-    
-    position: absolute;
-    left: -150px;
-    transition: 0.3s ease-in;
+
+.side_toggle::before {
+  content: ">";
+  display: inline-block;
+  //width: 50px;
+  width: 200px;
+  line-height: 50px;
+  font-size: 24px;
+  padding-right: 10px;
+  text-align: right;
+  //border-right: 1px solid #000;
   
-    //position: fixed;
-  }
-  .side_input:checked + .side_toggle::before {
-    content: "<";
-    //text-align: center;
-    left: 0;
-  }
-  
-  .side_input:checked ~ .side_list {
-    display: inline;
-    left: 0;
-  }
-  
-  .side_list {
-    position: absolute;
-    left: -200px;
-    top: 50px;
-    bottom: 0;
-    border-right: 1px solid #000;
-    width: 200px;
-    font-size: 24px;
-    transition: 0.3s ease-in;
-  }
-  
-  .side_link {
-    display: block;
-    text-align: center;
-    padding: 40px 0;
-    border-bottom: 1px solid #000;
-  }
-  .blind {
-    position: relative;
-    top: 0;
-    left: 0;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-  }
+  position: absolute;
+  left: -150px;
+  transition: 0.3s ease-in;
+
+  //position: fixed;
+}
+.side_input:checked + .side_toggle::before {
+  content: "<";
+  //text-align: center;
+  left: 0;
+}
+
+.side_input:checked ~ .side_list {
+  display: inline;
+  left: 0;
+}
+
+.side_list {
+  position: absolute;
+  left: -200px;
+  top: 50px;
+  bottom: 0;
+  border-right: 1px solid #000;
+  width: 200px;
+  font-size: 24px;
+  transition: 0.3s ease-in;
+}
+
+.side_link {
+  display: block;
+  text-align: center;
+  padding: 40px 0;
+  border-bottom: 1px solid #000;
+}
+.blind {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+}
