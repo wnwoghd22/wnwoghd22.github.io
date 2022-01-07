@@ -32,9 +32,8 @@ copy C:\Ruby30-x64\lib\ruby\gems\3.0.0\gems\minima-2.5.1\_sass\minima .\_sass\mi
 
 스타일을 만들어 줬으니, 이제 default 레이아웃에 태그를 추가해봅시다!
 
-{% highlight ruby %}{% raw %}
-#./_layouts/default.html
-[...]
+{% highlight html %}{% raw %}
+<!-- _layouts/default.html -->
 
 <main class="page-content" aria-label="Content">
       <div>
@@ -63,7 +62,7 @@ copy C:\Ruby30-x64\lib\ruby\gems\3.0.0\gems\minima-2.5.1\_sass\minima .\_sass\mi
 그런 다음 `sidebar` 안에 `container.html` 과 `element.html`을 각각 만듭니다.
 `default` 레이아웃에 추가했던 사이드바 태그는 모두 `container` 안에 옮기고, 그 자리에는 다음 코드로 대신해줍니다.
 
-{% highlight ruby %}{% raw %}
+{% highlight html %}{% raw %}
 [...]
 
 <main class="page-content" aria-label="Content">

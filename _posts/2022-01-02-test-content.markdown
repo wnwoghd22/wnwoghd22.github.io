@@ -6,7 +6,7 @@ categories: daily
 ---
 As my `first` step for becoming professional programmer, I decided to make a `github blog`.
 
-{% highlight ruby %}
+{% highlight c %}
 #include <stdio.h>
 
 int main(void) {
