@@ -13,7 +13,7 @@ categories: daily update
 
 꼴에 4학년 막바지에 웹 프로그래밍 수업 하나를 들어둔 게 있어서, `ejs`를 이용한 정적 페이지 구축을 어떻게 하는지는 대강 머리 속에 그림이 그려지긴 합니다. `jekyll`의 구조를 보니 조금만 공부해보면 이런저런 요소를 추가해 넣을 수 있을 것 같네요.
 
-{% highlight ruby %}{% raw %}
+{% highlight html %}{% raw %}
 <!-- ejs -->
 <% ... script ... %>
 
@@ -38,7 +38,7 @@ _site는 `.gitignore`에 추가해서 쓸데없이 커밋되는 일이 없도록
 
 그럼 `index.markdown` 파일을 볼까요?
 
-{% highlight ruby %}{% raw %}
+{% highlight liquid %}{% raw %}
 ---
 # Feel free to add content and custom Front Matter to this file.
 # To modify the layout, see https://jekyllrb.com/docs/themes/#overriding-theme-defaults

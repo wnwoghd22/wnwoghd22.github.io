@@ -5,7 +5,9 @@ layout: post
 <table class="post-book-info">
     <tbody>
         <tr>
-            <td rowspan="3" class="book-image-cell"><img src='{{page.book-img}}' alt='cover' class='book-image'/></td>
+            {%- if page.book-img -%}
+                <td rowspan="3" class="book-image-cell"><img src='{{page.book-img}}' alt='cover' class='book-image'/></td>
+            {%- endif -%}
             <td>제목</td>
             <td>{{ page.book-title }}</td>
         </tr>

@@ -10,7 +10,7 @@ categories: daily
 일단 `sticky` 속성을 부여하겠습니다.
 이 속성이 부여되면, 스크롤을 내려도 요소가 화면 밖으로 튀어나가는 것을 막을 수 있습니다.
 
-{% highlight ruby %}{% raw %}
+{% highlight css %}{% raw %}
 .sidebar {
   float: left;
   position: sticky;
@@ -33,7 +33,7 @@ categories: daily
 우선 홈페이지의 리스트를 컴포넌트로 만들어서 `_layouts\homeList`의 파일들로 분리하겠습니다.
 그리고, JS의 함수에서 리스트를 참조할 수 있게, 카테고리 별로 클래스를 지정해줍니다.
 
-{% highlight ruby %}{% raw %}
+{% highlight liquid %}{% raw %}
 <!-- _layouts/homeList/element.html -->
 
 {% capture post_class %}post-item {{ post.categories | first }}{% endcapture %}
@@ -55,7 +55,7 @@ categories: daily
 
 HTML 과 JS 는 스크립트언어로, 위에서부터 아래로 내려오며 각 문장을 `인터프리팅`합니다. `C`나 `JAVA`처럼 시작부터 끝까지 완성된 코드를 미리 `컴파일`하는 구조가 아니어서, 코드를 한 줄 한 줄 수정해 가며 결과를 눈으로 확인할 수 있다는 장점이 있습니다. 하지만 그만큼 실행 중 오류가 발생하지 않도록 주의를 기울여야 합니다. 위에서 변수가 선언되어 있지 않으면, 변수를 참조해도 `undefined`를 뱉어냅니다. 물론 `호이스팅`같은 장치가 존재하지만, 중요한 것들은 상단에 정의해 두는 게 좋겠습니다.
 
-{% highlight ruby %}{% raw %}
+{% highlight javascript %}{% raw %}
 var current_category = "";
 var page_length = 10;
 var index = 0;
@@ -104,7 +104,7 @@ SetCategory = c => {
 
 `setIndexByElement(n: number)` : n번째 페이지를 표시합니다. 동시에 index 변수도 수정합니다.
 
-{% highlight ruby %}{% raw %}
+{% highlight javascript %}{% raw %}
 let items = document.getElementsByClassName('post-item' + ' ' + current_category);
 {% endraw %}{% endhighlight %}
 
