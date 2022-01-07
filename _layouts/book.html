@@ -1,0 +1,22 @@
+---
+layout: post
+---
+
+<table class="post-book-info">
+    <tbody>
+        <tr>
+            <td rowspan="3" class="book-image-cell"><img src='{{page.book-img}}' alt='cover' class='book-image'/></td>
+            <td>제목</td>
+            <td>{{ page.book-title }}</td>
+        </tr>
+        <tr>
+            <td>저자</td>
+            <td>{{ page.book-author }}</td>
+        </tr>
+        <tr>
+            <td>발행일</td>
+            <td>{{ page.pub-date }}</td>
+        </tr>
+    </tbody>
+</table>
+{{ content }}
