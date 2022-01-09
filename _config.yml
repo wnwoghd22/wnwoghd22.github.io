@@ -30,6 +30,9 @@ github_username: wnwoghd22
 youtube_channel: ["UCt5yljKsv3adR8NV1nJqrlg", "Jay"]
 instagram_username: jaehong202
 
+disqus:
+  shortname: blog-jay
+
 #footer-links:
 #  github: wnwoghd22/
 #  youtube: channel/UCt5yljKsv3adR8NV1nJqrlg
