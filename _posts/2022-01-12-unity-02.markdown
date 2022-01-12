@@ -1,0 +1,83 @@
+---
+layout: post
+title:  "유니티 프로젝트 (2) - 점프 만들기"
+date:   2022-01-12 18:00:00 +0900
+categories: Unity
+---
+
+ 구글 플레이스토어에 업로드하기 위한 준비가 되었습니다! 그럼 이제 남은 건, <em>게임을 만드는 것</em>이군요? 이 상태로는 게임을 받아봤자 아무 일도 일어나지 않습니다. 시작해봅시다.
+
+ 텅 빈 공간에 일단 <strong>바닥</strong>과 <strong>플레이어</strong>를 만들어 줍니다. (hierarchy 창에서 2D Object &rarr; Sprites &rarr; Square) 사각형 2개를 생성합니다.
+ 
+![create-square](/assets/images/2022-01-12-unity-02/create_square.png)
+![two-squares](/assets/images/2022-01-12-unity-02/two_squares.png)
+
+아직 이 상태로는 아무것도 할 수 없습니다. 두 네모에게는 형체만 있을 뿐, 그 어떠한 힘도 충돌도 없습니다. 이제 영혼을 불어넣어 봅시다!
+
+![collider](/assets/images/2022-01-12-unity-02/col.png)
+
+왼쪽의 Inspector 창에서 <strong>Add Component</strong> &rarr; <strong>Box Collider 2D</strong>로 충돌 속성을 줍시다. 이렇게 되면 이 사각형은 collider를 가진 다른 오브젝트와 충돌할 수 있게 됩니다. 하지만 어느 한 쪽이라도 움직여야 부딪히겠죠?
+
+![rigidbody](/assets/images/2022-01-12-unity-02/rb.png)
+
+Player에게 Rigidbody2D를 달아줍니다. Collider가 단순히 충돌할 수 있는 무언가를 만들어준다면, Rigidbody는 오브젝트에게 물리적 속성을 줍니다. 중력, 가속도, 회전 제약 등은 Rigidbody에서 설정할 수 있습니다.
+
+그럼 한번 돌려봅시다.
+
+![gravity](/assets/images/2022-01-12-unity-02/gravity.gif)
+
+우리의 주인공이 바닥에 떨어지는 기능을 만들었습니다. 그럼 점프 기능까지 만들어봅시다. C# 파일을 하나 만들어줍니다.
+
+![cs-file](/assets/images/2022-01-12-unity-02/create_cs.png)
+
+그럼 파일을 손봅시다. 
+
+![visual-studio](/assets/images/2022-01-12-unity-02/vs.png)
+
+유니티에서 점프를 비롯해 움직임을 구현하는 방법은 반드시 정해진 방식만 있는 것은 아닙니다. 게임의 장르에 따라 그 방식 중 하나를 골라 쓰면 됩니다. 직접 transform 컴포넌트를 찾아 position을 바꿔주는 것도 그 방법 중 하나죠. 
+
+![top-down](/assets/images/2022-01-12-unity-02/top-down.png)
+
+하지만 이 방법을 쓸 수 있는 건 그 움직임이 선형일 경우 뿐이라는 겁니다. 탑다운 뷰라면 이는 가장 비용이 저렴한 방법이 되겠죠. 그러나 중력이 존재하는 사이드 뷰같은 게임 장르에서 직접 position을 변경하는 방식을 쓰겠다면, 코드 어딘가에 포물선 그래프를 그리는 함수를 만들어놓고 프레임이 업데이트될 때마다 호출해야 할 겁니다.
+
+![side-view](/assets/images/2022-01-12-unity-02/side-view.png)
+
+게임엔진은 이런 물리학을 적용할 수고를 굳이 게임개발자에게 떠넘기지 않습니다. 자연계의 모든 물리법칙은 블랙박스에 넣어놓고, 개발자는 그냥 변수만 넣으면 알아서 계산해주는 거죠.
+
+![blackbox](/assets/images/2022-01-12-unity-02/black_box.png)
+
+아까 Rigidbody는오브젝트에게 물리적 속성을 준다고 했죠? 그래서 중력의 영향을 받아 밑으로 떨어지는 거구요. 또한 힘을 가하면 그에 반응해 움직이기도 합니다. 그리고 이 가해진 힘은 중력을 비롯해 이미 작용받은 힘들과의 복잡한 상호작용이 모두 계산되어 적용됩니다. 그럼 코드를 짜보죠.
+
+일단 Rigidbody에 힘을 줘야하니까, 컴포넌트를 찾는 게 우선입니다.
+
+{% highlight csharp %}{% raw %}
+Rigidbody2D rb;
+
+void Start() {
+    rb = GetComponent<Rigidbody2D>();
+}
+{% endraw %}{% endhighlight %}
+
+우선 플레이어 클래스의 멤버로 Rigidbody를 할당할 변수를 만듭니다(`rb`). 게임이 시작되는 첫 프레임에 rb를 찾아줍니다(`GetComponent<Rigidbody2D>()`). 이제 입력이 있으면 점프하도록 해보죠.
+
+{% highlight csharp %}{% raw %}
+void Update() {
+    if (Input.GetKeyDown(KeyCode.Space)) {
+        rb.velocity += Vector2.up * 10f;
+    }
+}
+{% endraw %}{% endhighlight %}
+
+스페이스바를 누르면 Rigidbody에 윗방향으로 10만큼 힘을 주겠습니다.
+
+![code](/assets/images/2022-01-12-unity-02/code.png)
+
+플레이어에게 C# 스크립트를 넣어주고 실행시켜봅시다.
+
+![jump](/assets/images/2022-01-12-unity-02/demo_jump.gif)
+
+오! 점프 기능을 만들었습니다. 하지만 문제가 하나 있는데요...
+
+![doublejump](/assets/images/2022-01-12-unity-02/double_jump.gif)
+
+공중에서도 몇 번이고 점프가 가능하다는 거죠. 이래서는 제대로 된 점프라고 보기 힘들겠는데요. 땅을 딛고 있을 때만 점프를 할 수 있게 바꿔야겠습니다. 그럼 이번 글은 여기까지 하고, 착지를 확인하는 기능은 다음에 이어서 하겠습니다.

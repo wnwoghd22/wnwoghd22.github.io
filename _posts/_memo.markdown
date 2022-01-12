@@ -14,3 +14,6 @@ categories: Pensee
 흠, 사이드 바를 recursive하게 만들 수 있을까?
 - category | last 라면 최종 사이드 버튼만 만들고,
 - ! category | last 라면 일단 버튼을 만든 후 밑에 접히는 리스트를 하나 더 만드는 식으로.
+
+isOnGround 가장 좋은 해결방법.
+https://github.com/Unity-Technologies/PhysicsExamples2D/blob/52ac7bff053365e39333c4eada4cd89c937cfd38/Assets/Scripts/SceneSpecific/Miscellaneous/SimpleGroundedController.cs#L17
