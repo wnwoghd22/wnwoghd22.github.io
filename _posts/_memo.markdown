@@ -17,3 +17,9 @@ categories: Pensee
 
 isOnGround 가장 좋은 해결방법.
 https://github.com/Unity-Technologies/PhysicsExamples2D/blob/52ac7bff053365e39333c4eada4cd89c937cfd38/Assets/Scripts/SceneSpecific/Miscellaneous/SimpleGroundedController.cs#L17
+
+isOnground 포스팅
+- 3가지 방법을 소개하자.
+1. 스캔 방식 (boxcast, overlapcircle 등) : effector가 반영되지 않음
+2. 운동량 감지 방식 (velocity > -threshold && velocity < threshold) : 더블점프 문제. (치명적) 엘리베이터 플랫폼
+3. 충돌 감지 방식 (isTouching) : 가장 깔끔함.
