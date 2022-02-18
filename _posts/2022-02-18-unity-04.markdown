@@ -1,0 +1,277 @@
+---
+layout: post
+title:  "유니티 프로젝트 (4) - Virtual button & joystick"
+date:   2022-02-06 22:00:00 +0900
+categories: Unity
+---
+
+점프도 만들고 이동 기능도 만들었지만, 아직은 키보드 없이는 조작이 불가능합니다. 이래서는 모바일로 빌드한다고 해도 실행중에 그 어떠한 일도 일어나지 않을 겁니다. 유니티에서 제공하는 기본 `Button`이나 에셋 스토어에서 모바일용 조이스틱을 찾아 써도 되겠지만, 이렇게 간단한 정도는 직접 만들어보는 것도 나쁘지 않겠죠? `JAVA`나 `C#`과 같은 객체지향 프로그래밍에 대한 어느정도의 이해만 갖춰져있다면 어렵지 않게 만들 수 있습니다. 다음은 결과 화면이죠.
+
+![example](/assets/images/2022-02-18-unity-04/virtual_button_example.gif)
+
+그럼 바로 만들어보죠!
+
+<h2>Interface란?</h2>
+
+`Unity`에서 스크립트 언어로 채택한 `C#`은 `Interface`를 구현하고 쓸 수 있습니다. `JAVA`를 공부해 보셨다면 이 Interface에 대해 이미 아시겠지만, 혹시나 모르는 분들을 위해 간단히 설명하고 넘어가죠.
+
+`Interface`라는 건 간단하게 말하자면, <strong>어떤 목적을 위해 특정한 기능의 구현을 강제하는 것</strong>입니다.
+
+대체 이런게 왜 필요한 걸까요? 간단하게 예를 들어봅시다. 당신이 일하고 있는 회사에서 조금 황당한 업무를 지시했습니다. 회사의 모든 비품을 <em>순서대로</em> 정리하라는 것이죠. 서류는 인쇄한 날짜 순으로 정리하라는 건지, 이름 순으로 정리하라는 건지 모르겠습니다. 펜은 길이 순으로 정리해야 할까요, 색깔 순으로 정리해야 할까요? 이 때 순서 비교를 위한 기준을 명시해 준다면 일은 무척이나 단순해질 겁니다. 서류는 이름 순으로, 펜은 색깔 순으로 정리하라는 식으로 말이죠. 이 `비교`를 함수라고 생각해봅시다. 그럼 각 비품 별로 `비교` 함수를 만들어주는 것이 바로 `Interface`의 구현이라고 볼 수 있습니다!
+
+`JAVA` 프로그래밍을 조금 공부해보신 분들이라면, `compareTo` 메소드에 대해 아마 알고 계시리라 봅니다. 이것이 바로 위에서 예시로 든 `비교`함수가 되는 거죠! 이 `compareTo` 메소드는 `Comparable<T>`라는 interface 안에 선언되어 있습니다. 한번 구현해 볼까요?
+
+{% highlight java %}{% raw %}
+public class Paper implements Comparable<Paper> {
+    public String name;
+
+    @Override
+    public int compareTo(Paper o) {
+        return name.compareTo(o.name);
+    }
+}
+
+public class Pen implements Comparable<Pen> {
+    public int color; //RGB 0x000000 ~ 0xFFFFFF
+
+    @Override
+    public int compareTo(Pen o) {
+        if (this.color == o.color) {
+            return 0;
+
+        } else if(this.color < o.color) {
+            return -1;
+
+        } else {
+            return 1;
+        }
+    }
+}
+{% endraw %}{% endhighlight %}
+
+(T가 뭔지, implements가 뭔지는 자세히 설명하지 않겠습니다. 이번 글에서는 단순히 예제로 보인 것이며, 다음에 JAVA에 대한 글을 올리게 되면 다뤄보죠.)
+
+이렇게 compareTo 메소드를 구현해 둔다면, 대소비교를 무척 쉽게 해낼 수 있습니다. 참고로 Paper 클래스에서 볼 수 있듯이 JAVA의 String은 이미 compareTo 메소드가 구현되어 있습니다. 문자열의 대소비교는 꽤 귀찮은 작업이기도 하고, 아무 것도 구현되어 있지 않은 상태에서 단순히 문자열을 비교해버리면 그냥 주소값을 비교해버리죠. 음, 그냥 compareTo 메소드만 구현되어있다고 해서, 뭔가 일이 편해질 것 같지는 않은데요?
+
+여기서 Interface의 힘이 발휘되죠. sort 메소드를 `Comparable<T>` Interface를 구현한 모든 클래스 `T`의 배열이나 List<T>에 사용할 수 있다면? 그리고 JAVA는 실제로 이러한 프로그래밍이 가능하죠.
+
+더 포괄적으로 생각해보자면, 어떤 Interface를 만들어놓고, 이 Interface에서 뱉어내는 정해진 반환값만 받는 거대한 프로그램이 이미 만들어져 있다고 해봅시다. 그렇다면 이 프로그램을 응용하고 싶다면 내부를 뜯어고칠 필요 없이 Interface만 구현해주면 되는 겁니다.
+
+만약 당신의 회사가 내일 갑자기 직원 슬리퍼를 사들인다고 한다면,  당신은 sort메소드를 뜯어고칠 필요 없이 그냥 `Comparable<Slipper>`만 구현해주면 되는 거죠.
+
+이제 다시 Button 만들기로 돌아옵시다.
+
+그리고 우리가 만들 버튼은 다음과 같은 정해진 기능을 가져야 합니다.
+
+- 버튼 눌림 감지
+- 버튼 뗌 감지
+
+Unity는 이러한 화면 조작을 위한 Interface를 제공합니다. 만일 어떤 object의 눌림이나 뗌 조작을 원한다면, 이 Interface를 구현해주기만 하면 되죠! 이 친구들의 이름은 다음과 같습니다.
+
+- IPointerDownHandler
+- IPointerUpHandler
+
+그럼 바로 써볼까요?
+
+{% highlight csharp %}{% raw %}
+public class JoyButton : MonoBehaviour, IPointerUpHandler, IPointerDownHandler
+{
+    private bool hold;
+
+    void Start()
+    {
+        hold = false;
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        hold = true;
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        hold = false;
+    }
+}
+{% endraw %}{% endhighlight %}
+
+(JAVA와 C#은 문법이 조금 다릅니다. 상속의 경우 JAVA class는 extends, interface는 implements keyword를 각각 써야하죠. 하지만 C#은 모든 상속 대상에 대해 `:` 만으로 상속받습니다. 참고로 C# 또한 JAVA처럼 <em>다중상속은 불가능합니다</em>. 하지만 Interface는 여러 개를 상속받을 수 있습니다. <em>죽음의 다이아몬드</em>같은 문제를 다루기에는 이 포스트가 너무 길어질 듯 하니 다음에 다뤄봅시다.)
+
+이제 버튼이 눌린 상태에서는 hold가 true를, 뗀 상태에서는 false를 반환합니다. 버튼을 누르고 있는지를 확인할 수 있게 되었죠. 하지만 눌린 상태만 확인하는 건 좀 밋밋하네요. 내친김에 눌렸을 때, 누르고 있을 때 그리고 버튼에서 손을 뗄 때를 모두 확인할 수 있게 만들어줍시다.
+
+그러려면 hold변수에 더해 button의 State변수를 만들어줄 필요가 있겠네요. 정해진 개수의, 상호 배타적인 상태 집합이니까 Enum으로 선언해도 문제 없겠군요.
+
+{% highlight csharp %}{% raw %}
+public enum eButtonState
+{
+    None,
+    Down,
+    Pressed,
+    Up,
+}
+{% endraw %}{% endhighlight %}
+
+그리고 다음과 같이 Update 메소드를 작성합시다.
+
+{% highlight csharp %}{% raw %}
+public class JoyButton : MonoBehaviour, IPointerUpHandler, IPointerDownHandler
+{
+    ...
+
+    public eButtonState State { get; private set; }
+
+    void Start()
+    {
+        hold = false;
+        State = eButtonState.None;
+    }
+    void Update()
+    {
+        switch (State)
+        {
+            case eButtonState.None:
+                if (hold)
+                    State = eButtonState.Down;
+                break;
+            case eButtonState.Down:
+                if (hold)
+                    State = eButtonState.Pressed;
+                break;
+            case eButtonState.Pressed:
+                if (!hold)
+                    State = eButtonState.Up;
+                break;
+            case eButtonState.Up:
+                if (!hold)
+                    State = eButtonState.None;
+                break;
+        }
+    }
+{% endraw %}{% endhighlight %}
+
+이제 버튼이 눌릴 때와 올라올 때, 딱 한 frame씩만 Down 또는 Up 상태가 되도록 만들어줬습니다.
+
+이 코드를 응용하면, JoyStick도 어렵지 않게 만들 수 있죠. 그러기 위해서는 Interface를 하나 더 구현해 주어야합니다.
+
+- IDragHandler
+
+이 Interface는 OnDrag 메소드를 구현할 것을 강제합니다. OnDrag 메소드는 마우스나 터치 드래그 이벤트가 발생했을 때 드래그의 위치를 활용할 수 있도록 해줍니다. 조이스틱의 구현을 위해서는 배경이 될 이미지 위에 스틱이 하나 더 있어야겠죠. 멤버 변수로 만들어줘야겠네요. 그 외에도 스틱의 입력으로 방향도 받을 수 있도록 해줍시다.
+
+{% highlight csharp %}{% raw %}
+public class JoyStick : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IDragHandler
+{
+    private Image back;
+    private Image stick;
+
+    private bool hold;
+    public eButtonState State { get; private set; }
+
+    public Vector2 InputDir { get; private set; }
+    float backRadius;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        hold = false;
+        State = eButtonState.None;
+
+        back = GetComponent<Image>();
+        stick = transform.GetChild(0).GetComponent<Image>();
+        backRadius = back.rectTransform.sizeDelta.x / 2;
+    }
+    ...
+{% endraw %}{% endhighlight %}
+
+Joystick의 child component로 스틱을 위에 올려놓습니다. Scene의 첫 프레임에 스틱을 찾아 멤버 변수로 저장해 줍시다. 스틱의 크기가 얼마가 될지 모르니 backRadius 또한 첫 프레임에 값을 구해 저장해 줍니다.
+
+그리고 필요한 interface를 구현해줍니다.
+
+{% highlight csharp %}{% raw %}
+    public void OnDrag(PointerEventData eventData)
+    {
+        Vector2 pos = Vector2.zero;
+
+        if (hold && RectTransformUtility.ScreenPointToLocalPointInRectangle(back.rectTransform, eventData.position, eventData.pressEventCamera, out pos))
+        {
+            pos.x /= backRadius * 2;
+            pos.y /= backRadius * 2;
+            InputDir = new Vector2(pos.x, pos.y);
+            InputDir = InputDir.magnitude > 1 ? InputDir.normalized : InputDir;
+
+            Vector2 stickPos = new Vector2(InputDir.x * backRadius * 2, InputDir.y * backRadius * 2);
+
+            stick.rectTransform.anchoredPosition = stickPos.magnitude < backRadius ? stickPos : stickPos * (backRadius / stickPos.magnitude);
+        }
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        OnDrag(eventData);
+
+        hold = true;
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        hold = false;
+
+        InputDir = Vector2.zero;
+        stick.rectTransform.anchoredPosition = Vector2.zero;
+    }
+{% endraw %}{% endhighlight %}
+
+OnpointerDown 내부에서 OnDrag 메소드를 호출하여 버튼이 눌렸을 때에만 조이스틱이 움직이도록 해줍니다. OnDrag 메소드에서는 입력받은 방향을 정규화해주고, 스틱이 이동하도록 해줍니다. 버튼을 놓으면 다시 원점으로 돌아가게 해줍니다. 나머지 흐름은 Button과 다르지 않습니다.
+
+이제 준비는 끝났습니다.
+
+![example](/assets/images/2022-02-18-unity-04/editor_example.png)
+
+Hierarchy창에서 Canvas를 추가하고, child로 Image를 생성합니다. 그리고 JoyButton의 스크립트를 넣기만 하면 끝이죠. JoyStick의 경우는 child로 조금 더 작은 Image를 생성해주고 JoyStick 스크립트를 추가해줍니다.
+
+Player가 Virtual Button input을 처리할 수 있도록 코드를 추가해 줍시다.
+
+{% highlight csharp %}{% raw %}
+    [SerializeField]
+    private JoyButton jumpButton;
+    [SerializeField]
+    private JoyStick moveStick;
+
+    // Update is called once per frame
+    void Update()
+    {
+        HandleVirtualInput();
+    }
+
+    private void HandleKeyboardInput()
+    {
+        float h = Input.GetAxisRaw("Horizontal");
+        Vector3 pos = transform.position;
+        pos.x += h * moveSpeed * Time.deltaTime;
+        transform.position = pos;
+
+        if (Input.GetKeyDown(KeyCode.Space) && IsOnGround())
+        {
+            rb.velocity += Vector2.up * 10f;
+        }
+    }
+    private void HandleVirtualInput()
+    {
+        float h = moveStick.InputDir.x;
+        Vector3 pos = transform.position;
+        pos.x += h * moveSpeed * Time.deltaTime;
+        transform.position = pos;
+
+        if (jumpButton.State == eButtonState.Down && IsOnGround())
+        {
+            rb.velocity += Vector2.up * 10f;
+        }
+    }
+{% endraw %}{% endhighlight %}
+
+Update 메소드 안에 있던 키보드 입력 처리 부분을 따로 빼내고 이와 비슷하게 가상 버튼 조작을 처리하는 메소드를 만듭니다. SerializeField 영역의 button과 stick은 Unity Inspector창에서 추가해줍니다.
+
+그리고 실행시켜보면 처음에 봤던대로 조작이 가능해집니다. 본 포스트의 예제는 [Github][link]에 올라와 있으니, 확인해 보고 싶은 분들은 받아 보셔도 됩니다.
+
+이제 모바일 환경에서도 게임을 즐길 수 있겠군요! 다음 글부터는 3D로 넘어가 볼까요?
+
+[link]:https://github.com/wnwoghd22/Dash/tree/main/Assets/Scripts/Control
