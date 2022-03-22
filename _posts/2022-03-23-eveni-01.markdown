@@ -1,0 +1,85 @@
+---
+layout: post
+title:  "이븐아이 게임톤 0. 여정의 시작"
+date:   2022-03-23 00:30:00 +0900
+categories: Even-I
+---
+
+게임 개발자로서의 커리어를 시작하고 싶었지만, 내세울 경력도, 활동도 없으니 얼굴조차 들기 힘든 상황입니다. 만, 한줄기 빛이 보이는 느낌이 들기 시작했습니다. Even-I 게임톤 참가자로 선정되었거든요! 물론 5월 중순까지는 한없이 갈려나가겠죠. 계약직으로 주6일 일하고 있는 상황에서도 개발은 계속되어야 할 것이고, 일도 프로젝트도 제 사정을 고려해주진 않을 겁니다. 하다못해 인생의 두 달 정도는, 미친듯 치열하게 살아봐야하지 않겠어요?
+
+![example](/assets/images/2022-03-23-eveni-01/OT.jpg)
+
+OT 수업은 3월 21일 월요일에 있었습니다. 화요일 수업이 끝나고, 게임 아이디어 정리에 관한 회의가 이어졌습니다. 밤 12시가 넘어서야 끝이 났죠. 그러는 중에 10분만에 프로토타입을 만들어 보여줬는데, 좀 더 다듬어야겠습니다.
+
+물론 작성한 코드는 고작 한 페이지 정도지만요.
+
+{% highlight csharp %}{% raw %}
+public class PlayerController : MonoBehaviour
+{
+    private Rigidbody2D rb;
+    [SerializeField]
+    private ContactFilter2D ground;
+    public bool OnGround => rb.IsTouching(ground);
+
+    private bool touching = false;
+
+    [SerializeField]
+    private float eff = 5f;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        rb = GetComponent<Rigidbody2D>();
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (touching)
+            {
+                if (OnGround)
+                {
+                    Debug.Log("jump");
+                    rb.AddForce(Vector2.up * eff, ForceMode2D.Impulse);
+                } 
+                else
+                {
+                    Debug.Log("wall jump");
+                    rb.AddForce(new Vector2(0, 3f) * eff, ForceMode2D.Impulse);
+                }
+            }
+        }
+
+        if (!touching)
+        {
+            Vector2 pos = transform.position;
+            pos.x += 0.1f;
+            transform.position = pos;
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.layer == 6)
+        {
+            touching = true;
+        }
+    }
+    private void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.layer == 6)
+        {
+            touching = false;
+        }
+    }
+}
+{% endraw %}{% endhighlight %}
+
+앞으로 개발하는 틈틈히 일지를 작성해야겠습니다. 블로그 포스팅과 함께 [노션][notion_link]에 정리해두기도 해서, 프로젝트가 끝난 시점에 돌아보는 여유는 있어야겠죠?
+
+자, 이제 시작입니다.
+
+
+[notion_link]:https://mire-giraffe-6df.notion.site/Even-I-749a9dd072c144808f0bc306f1c84c8a
