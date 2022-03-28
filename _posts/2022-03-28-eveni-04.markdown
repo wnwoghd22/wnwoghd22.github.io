@@ -1,0 +1,127 @@
+---
+layout: post
+title:  "이븐아이 게임톤 3. 파일 시스템 구축, UniTask"
+date:   2022-03-28 23:30:00 +0900
+categories: Even-I
+---
+
+어느덧 게임톤도 2주차에 접어들었습니다. 본격적인 개발 단계에 착수해야 하죠.
+
+마구잡이로 만들어내는게 GameJam의 묘미겠지만, 우리는 일단 기초공사부터 탄탄하게 마쳐놓고 시작하려고 합니다. 그 첫번째로 파일 시스템을 만드는 것부터 시작하려고요.
+
+게임톤의 목표는 <em>플레이스토어 출시</em>입니다. 플랫폼이 안드로이드라는 뜻이죠. 근데 유니티에서 이 안드로이드라는 플랫폼의 파일 입출력 시스템을 구축할 때에는, 특별히 신경 써야 할 것들이 있습니다.
+
+<h2>안드로이드의 파일 경로</h2>
+
+유니티에서 쓰게 될 파일 경로는 3가지가 있습니다. 그중에서 Local 경로는 그닥 쓸 일은 없으니 두 가지를 비교해보도록 하죠.
+
+- [Application.PersistentDataPath][persistent_link]
+- [Application.StreamingAssetsPath][streaming_link]
+
+이중에서 어떤 경로가 더 좋다, 의 문제가 아닙니다. 두 경로는 그 특성도, 접근 방식도 완전히 다르기 때문에 목적에 맞게 구분해서 사용하는 것이 좋습니다. 어떤 차이가 있는지 살펴보죠.
+
+PersistentData는 읽고 쓰는 게 자유로우며, 안드로이드 플랫폼에서도 접근하기 위해 특별한 과정을 거칠 필요 없이 바로 읽어낼 수 있습니다. 그 특징으로는, 이 경로는 앱 내부에 있지 않습니다. 로컬 저장소에 있어, 앱을 업데이트하더라도 이 경로에 있는 파일은 그대로 보존되죠. 처음 게임을 시작하면, 이 저장소에는 게임과 관련된 그 어떠한 파일도 없습니다. 이 PersistentData 경로에는 <strong>Save File</strong>을 저장하는 게 그 특성에 맞다고 볼 수 있습니다.
+
+그럼 각 스테이지 정보를 담은 파일은 어디에 담기는 것이 좋을까요? 남은 하나는 StreamingAssets군요. 이 경로는 유니티 프로젝트의 Assets 폴더 내부에 StreamingAssets 하위 폴더를 만들고 넣은 모든 파일에 대한 접근이 가능합니다. 그럼 이걸 쓰면 되겠네요!
+
+하지만 문제가 있습니다. 안드로이드는 그 특성상 앱 내부에 <strong>접근이 불가능합니다.</strong> 에, 그럼 이거 못 쓰는 거 아니냐구요? 
+
+걱정하지 마세요. 인터넷 연결하듯 web 요청을 보내는 방식으로 접근할 수 있습니다. 그런데, web 요청은 <em>비동기 async</em>거든요... 유니티에서 비동기 처리는 어떻게 하죠?
+
+<h2>코루틴</h2>
+
+유니티에 조금이라도 깊게 관심을 가졌던 사람이라면, <strong>코루틴</strong>의 존재를 모르진 않을 겁니다. 호출된 시점에 구애받지 않고 지연되거나 반복되는 작업을 할 때, 코루틴은 꽤 유용한 도구입니다. 하지만 `IEnumerator`를 고정적으로 반환해야하기 때문에 메소드 내부에서 구한 값을 넘겨주고 싶을 때 참조자를 써야 한다든지, 코루틴 호출을 위한 `StartCoroutine`같은 특수한 메소드를 별도로 호출해야 한다든지 이 녀석을 쓰려면 피곤한 게 한두 가지가 아닙니다.
+
+스테이지 파일을 읽어오기 위해 다음과 같은 코드를 작성했던 적이 있죠.
+
+{% highlight csharp %}{% raw %}
+private IEnumerator ReadStageFileForAndroidCoroutine(int level, int n)
+{
+    string filePath = "jar:file://" + Application.dataPath + "!/assets/Stages/" + level + "/" + n + ".txt";
+    using var request = UnityWebRequest.Get(filePath);
+    var operation = request.SendWebRequest();
+    while (!operation.isDone)yield return null;
+
+    string[] fileString = request.downloadHandler.text.Split('\n');
+    int idx = 0;
+
+    string[] size = fileString[idx++].Split(' ');
+
+    Board b = new Board(Convert.ToInt32(size[0]), Convert.ToInt32(size[1]), Convert.ToInt32(size[2]));
+
+    // 변환 작업
+
+    gm.SetBoard(b);
+
+    yield return b;
+}
+{% endraw %}{% endhighlight %}
+
+함수 내부에서 만든 값을 바로 반환하지 못하기 때문에, 굳이 메소드 안에서 다른 클래스의 메소드를 호출해야 하는 번거로운 작업을 하고, 그만큼 구조가 복잡해져버립니다.
+
+그냥 비동기 함수를 쓰면 안 되는 걸까요?
+
+{% highlight csharp %}{% raw %}
+private async Task<Board> ReadStageFileForAndroid(int n) {
+    Board b = null;
+
+    string filePath = "jar:file://" + Application.dataPath + "!/assets/Stages/" + n + ".txt";
+    using var request = UnityWebRequest.Get(filePath);
+    var operation = request.SendWebRequest();
+    while (!operation.isDone)
+    {
+        Debug.Log("not yet");
+        await Task.Yield();
+    }
+
+    b = new Board(Convert.ToInt32(size[0]), Convert.ToInt32(size[1]), Convert.ToInt32(size[2]));
+
+    // 변환 작업
+
+    return b;
+} 
+{% endraw %}{% endhighlight %}
+
+물론 C#에서 제공하는 Task 클래스를 써보긴 했습니다. 근데 이거, 안드로이드에서는 돌아가질 않습니다. 애초에 단일 쓰레드로 돌아가는 유니티에서 Task를 쓴다는 것 자체가 말이 안되긴 하죠. 그렇다고해서 비동기 처리로 깔끔하게 만들 수 있는 걸 굳이 코루틴을 쓰기도 그렇고... 하지만 답이 없는 건 아니더군요!
+
+<h2>UniTask</h2>
+
+게임톤 컨설팅 및 기획 발표 때 NPC 지미 님의 조언이 있었는데요, 게임 구현이 간단한 팀은 프로그래머들이 좀 다른 걸 시도해볼 필요가 있다고. 그중 하나가 UniTask였습니다. 이걸 써보라더군요. 비동기 처리를 위한 패키지라는 얘기를 들었을 때, "이거다!"하는 생각이 들었습니다.
+
+이 패키지를 활용하기 위해서는 에셋스토어 등에서 받을 수는 없고, [릴리즈 페이지][UniTask_link]에서 직접 패키지를 받아야 합니다. 그리고 이를 활용할 유니티 프로젝트에서 Import 해줘야 하죠.
+
+안드로이드 비동기 파일 접근을 위한 메소드는 다음과 같습니다. 참고로, 이 메소드는 PC에서도 잘 돌아갑니다. iOS는 잘 모르겠군요.
+
+{% highlight csharp %}{% raw %}
+public static async UniTask<string> GetMapFileForAndroid(int chapter, int stage)
+{
+    string filePath = Application.streamingAssetsPath + "/" + chapter + "-" + stage + ".csv";
+    Debug.Log(filePath);
+
+    var txt = (await UnityWebRequest.Get(filePath).SendWebRequest()).downloadHandler.text;
+    
+    return txt;
+}
+{% endraw %}{% endhighlight %}
+
+`async`와 `await`만 빼고 보면 일반 메소드와 달라보일 게 없습니다.
+
+함수 호출은 더 간단합니다.
+
+{% highlight csharp %}{% raw %}
+public async UniTask<Tree[]> GetTree(int chapter, int stage)
+{
+    string txt = await FileManager.GetMapFileForAndroid(chapter, stage);
+    treeData.trees = DataParser.ParseTreeData(txt);
+
+    return treeData.trees;
+}
+{% endraw %}{% endhighlight %}
+
+Luxa라는 저번 프로젝트를 만들 때 스테이지 정보를 불러오는 메소드의 역할 구분을 제대로 해주지 못한 게 크게 신경쓰였는데, 마침 현준님이 Parser클래스를 따로 만드셨길래 좀 더 깔끔한 코드로 작성해 주었습니다. 실제로 폰에 깔아서 확인해봐도 잘 돌아가더군요. 만족스럽습니다. UniTask가 그렇게까지 막 새로운 건 아닐텐데, 써보니까 편하고 좋네요.
+
+이제 레벨디자인 툴을 완성하는 게 우선이겠군요.
+
+[persistent_link]:https://docs.unity3d.com/ScriptReference/Application-persistentDataPath.html
+[streaming_link]:https://docs.unity3d.com/Manual/StreamingAssets.html
+[UniTask_link]:https://github.com/Cysharp/UniTask/releases
