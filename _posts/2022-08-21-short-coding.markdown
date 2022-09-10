@@ -66,7 +66,7 @@ int main() {
     while (G && B) result++, G--, B--;
     while (R && B) result++, R--, B--; // 2개를 넣을 수 있다면
     
-    result += !(!R) + !(!G) + !(!B); // 같은 색끼리 마저 넣기
+    result += !!R + !!G + !!B; // 같은 색끼리 마저 넣기
     
     std::cout << result;
 }
