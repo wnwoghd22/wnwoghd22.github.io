@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "AI, 갈 길이 멀다"
-date:   2022-09-06 14:00:00 +0900
+date:   2022-09-08 14:00:00 +0900
 categories: essay daily
 ---
 

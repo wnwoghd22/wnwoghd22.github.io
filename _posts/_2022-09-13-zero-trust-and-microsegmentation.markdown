@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Zero-trust와 Microsegmentation"
-date:   2022-09-06 14:00:00 +0900
+date:   2022-09-13 14:00:00 +0900
 categories: essay daily
 ---
 
