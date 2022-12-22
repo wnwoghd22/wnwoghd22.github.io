@@ -1,0 +1,13 @@
+---
+layout: post
+title:  "SSAFY 입과 - 중요한 것은 꺾이지 않는 마음"
+date:   2022-12-22 15:00:00 +0900
+categories: daily
+use_math: true
+---
+
+네, 그렇습니다.
+
+![result](/assets/images/2022-12-22-SSAFY/result.jpg)
+
+한 번 가봅시다.
