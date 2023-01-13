@@ -1,0 +1,8 @@
+---
+layout: post
+title: "Git의 세계"
+date:   2023-01-13 22:00:00 +0900
+categories: essay daily
+---
+
+싸피에서 각 잡고 제대로 배우게 된 Git은 생각보다 더 심오했네요.
