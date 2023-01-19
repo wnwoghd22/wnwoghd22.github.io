@@ -1,15 +1,5 @@
 
 {%- if site.posts.size > 0 -%}
-<script>
-    previousPage = () => {
-        if(index > 0) setIndex(index - 1);
-    }
-    nextPage = () => {
-        let pages = document.getElementsByClassName('postpage');
-        if(index < pages.length - 1) setIndex(index * 1 + 1);
-        window.scrollTo(0, 250);
-    }
-</script>
     <h2 class="post-list-heading">{{ page.list_title | default: "Posts" }}</h2>
     <ul class="post-list">
         {%- for post in site.posts -%}
@@ -18,5 +8,5 @@
 
         {%- endfor -%}
     </ul>
-    <span id="indexer" style="font-family: SAir; font-size: 15px; display: inline-block; width: 50px; text-align: center;"></span>
-{%- endif -%}
+    {%- include homeList/paginator.html -%}
+    {%- endif -%}
