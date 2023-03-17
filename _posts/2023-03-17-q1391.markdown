@@ -97,5 +97,3 @@ int main() {
 ```
 
 [q]:https://www.acmicpc.net/problem/1391
-[q2]:https://www.acmicpc.net/problem/11012
-[post]:https://www.acmicpc.net/blog/view/9

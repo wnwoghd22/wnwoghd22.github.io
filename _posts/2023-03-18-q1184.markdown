@@ -1,0 +1,144 @@
+---
+layout: post
+title:  "백준 1184 - 귀농"
+date:   2023-03-18 00:00:00 +0900
+categories: algorithm
+use_math: true
+---
+
+복잡하고 어려운 자료구조를 배우고, 대회용 알고리즘을 공부하는 것도 좋습니다. 하지만 본질은 결국 기본에 있겠죠. 이번에 골라서 풀어본 문제는 [귀농][q]입니다.
+
+뭘 구해야 할지는 금방 알 수 있습니다.
+
+![example](/assets/images/2023-03-18-q1184/example.png)
+
+이렇게, 한 꼭짓점을 기준으로 하여 대각선으로 마주하는 두 직사각형 영역의 가중치 합이 같아지는 경우의 수를 모두 찾으면 됩니다. 초보적인 코딩 기술로 `누적합`을 생각해볼 수 있습니다. 단순하게 이차원 영역의 가중치 합을 구할 것을, 누적합을 활용하면 시간복잡도 \\(O(N^2)\\)를 \\(O(1)\\)로 줄일 수 있습니다.
+
+그럼 모든 경우의 수는 얼마나 될까요? 일단 두 직사각형이 만나는 점을 찾으면 모두 \\(N^2\\)개입니다. 그 모든 점들에 대하여, 왼쪽 위와 오른쪽 아래로 각각 \\(N^2\\)개씩 점을 잡아줄 수 있으니까... 대략 \\(N^6\\)입니다. 왼쪽 위의 한 점에 대하여 오른쪽 아래의 모든 \\(N^2\\)개 점을 다 확인하고, 또 왼쪽 위의 다른 점에 대해... 이걸 순진하게 모두 찾아버리면 \\(O(N^6)\\)입니다. 무조건 터집니다.
+
+다르게 생각해야 합니다. 왼쪽 각각의 점들에 대해, 오른쪽 아래에선 완전히 동일한 작업들이 수행됩니다. 왼쪽 위의 각 점들에 대해, 영역의 누적합들의 개수를 어딘가에 저장해둘 수 있다면, 오른쪽 아래는 한 번씩만 훑어도 될 겁니다. 이런 방법으로 진행된다면 위쪽 점들의 집합과 오른쪽 점들의 집합 간 확인 작업은 독립적으로 이루어질 수 있습니다. 시간복잡도는 \\(O(N^4)\\)가 되는 거죠.
+
+하지만 이제 문제는 전혀 다른 쪽으로 옮겨갑니다. 누적합들의 개수를 저장해두겠다는 발상은 좋은데, 카운팅 배열은 그럼 얼마나 크게 잡아야 하는 걸까요? 각 칸의 가중치 \\(A_{ij}\\)는 최대 1000까지고, 음수일 수도 있습니다. 그렇다면 배열 크기는 최악일 때 \\(50 \times 50 \times 1000 \times 2 = 5000000\\)입니다. 발생 가능한 영역 누적합의 개수가 \\(2500\\)개가 되지 않음을 생각한다면 이건 꽤 비효율적이긴 합니다. 하지만 어쨌거나 할당 불가능한 크기도 아니고 적당히 처리해주기만 한다면 꽤 빠르니까, 이렇게 풀 수는 있습니다. 실제로 이렇게 거대한 카운팅 배열을 선언해서 푼 문제들은 준수한 실행시간을 보이는 반면 메모리를 상당히 소모합니다.
+
+# 해시
+
+누적합의 크기가 얼마가 될지 모르고, 어쨌든 그 수가 적다는 걸 안다면 생각해볼 수 있는 건 **해시**입니다. 영역 누적합의 크기 자체를 키로 삼아서 해시값을 구하고 버킷에 개수를 저장할 수 있죠. 이게 그럼 거대한 카운팅 배열과 무엇이 다르냐, 하면 해시법에서는 버킷 크기를 꽤 작게 잡아줘도 된다는 겁니다. 버킷 크기를 \\(5000\\)정도로 잡아줘도 최대 범위 \\(5000000\\)까지인 숫자들을 모두 관리할 수 있게 됩니다.
+
+물론 **해시 충돌**같은 문제 또한 발생할 수는 있습니다. 이에 대한 대처는 크게 두 가지입니다.
+
+1. 개방주소
+
+	- 특정 해시값의 버킷이 할당되었다면, 빈 버킷을 찾아 다음 인덱스로 넘어갑니다.
+
+2. 체이닝
+
+	- 특정 해시값에 대하여 링크드 리스트로 충돌되는 값들을 모두 연결하여 저장합니다.
+
+저는 체이닝으로 문제를 해결했습니다만, 수의 개수가 적기 때문에 개방주소법이 더 유리해보이긴 합니다.
+
+```cpp
+#include <stdio.h>
+
+typedef long long ll;
+const int BUCKET_LEN = 5381;
+
+class HashMap {
+	struct Node {
+		Node* next;
+		Node(int v) : val(v), cnt(1), next(0) {};
+		int val;
+		ll cnt;
+	} *bucket[BUCKET_LEN];
+	int hash(int v) const { return (v + BUCKET_LEN * 250) % BUCKET_LEN; }
+public:
+	HashMap() { for (int i = 0; i < BUCKET_LEN; ++i) bucket[i] = 0; }
+	void clear() {
+		for (int i = 0; i < BUCKET_LEN; ++i) {
+			Node* cur = bucket[i], *next;
+			while (cur) {
+				next = cur->next;
+				delete cur;
+				cur = next;
+			}
+			bucket[i] = 0;
+		}
+	}
+	void insert(int v) {
+		int key = hash(v);
+		if (!bucket[key]) bucket[key] = new Node(v);
+		else {
+			Node* cur = bucket[key], * next;
+			while (true) {
+				if (cur->val == v) {
+					cur->cnt++;
+					return;
+				}
+				if (!cur->next) break;
+				cur = cur->next;
+			}
+			cur->next = new Node(v);
+		}
+	}
+	ll operator[](int v) const {
+		int key = hash(v);
+		Node* cur = bucket[key];
+		while (cur) {
+			if (cur->val == v) { return cur->cnt; }
+			cur = cur->next;
+		}
+		return 0;
+
+	}
+} map;
+
+int N, A[51][51], S[51][51];
+
+int main() {
+	ll result = 0;
+    scanf("%d", &N);
+	for (int i = 1; i <= N; ++i) {
+		for (int j = 1; j <= N; ++j) {
+            scanf("%d", A[i] + j);
+			S[i][j] = A[i][j] + S[i - 1][j] + S[i][j - 1] - S[i - 1][j - 1];
+		}
+	}
+	for (int i = 1; i < N; ++i) {
+		for (int j = 1; j < N; ++j) {
+			map.clear();
+			for (int k = 0; k < i; ++k) {
+				for (int l = 0; l < j; ++l) {
+					int s = S[i][j] - S[k][j] - S[i][l] + S[k][l];
+					map.insert(s);
+				}
+			}
+			for (int k = i + 1; k <= N; ++k) {
+				for (int l = j + 1; l <= N; ++l) {
+					int s = S[k][l] - S[i][l] - S[k][j] + S[i][j];
+					result += map[s];
+				}
+			}
+
+			map.clear();
+			for (int k = 0; k < i; ++k) {
+				for (int l = j + 1; l <= N; ++l) {
+					int s = S[i][l] - S[i][j] - S[k][l] + S[k][j];
+					map.insert(s);
+				}
+			}
+			for (int k = i + 1; k <= N; ++k) {
+				for (int l = 0; l < j; ++l) {
+					int s = S[k][j] - S[i][j] - S[k][l] + S[i][l];
+					result += map[s];
+				}
+			}
+		}
+	}
+    printf("%lld", result);
+}
+```
+
+문제의 조건에 맞춰 따로 만든 해시맵을 썼는데, 이게 사실 정말로 효율적인지는 잘 모르겠습니다. 그냥 준수한 성능으로 돌아가는 걸 보니 그런가보다 하는 정도죠.
+
+이 문제는 풀이가 그렇게 다양하진 않지만, 성능 면에서는 둘로 갈립니다. 카운팅 배열을 쓰는 쪽은 메모리 소모가 큰 대신 상당히 빠른 실행시간을 보입니다. 해싱이나 정렬을 쓴 쪽은 메모리는 거의 쓰지 않는 대신 실행시간이 0.5초를 넘기는 경우가 적지 않습니다. 일종의 Trade-off가 발생한 거겠죠. 어째서 PS는 공부할수록 부족하다는 느낌이 드는 걸까요...
+
+[q]:https://www.acmicpc.net/problem/1184
