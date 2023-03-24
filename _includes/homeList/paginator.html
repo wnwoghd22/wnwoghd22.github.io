@@ -1,35 +1,16 @@
 <!--------------------- Pagination ----------------------->
-<span id="indexer" style="font-family: SAir; font-size: 15px; display: inline-block; width: 50px; text-align: center;"></span>
-<table>
-    <tbody>
-        <div class="pagenation float-right" style="list-style: none; padding:0px; display: inline-block; margin-right: 25px;">
-            <span class="previous" >
-                <button
-                    class="btn btn-primary"
-                    id='previousButton'
-                    onclick='previousPage()'
-                    style="margin:10px 10px 10px 10px; 
-                    padding: 5px 15px 5px 15px; width: 120px;
-                    text-transform:none !important">
-                Previous</button>
-            </span>
-
-            
-
-            <span>
-                <button
-                    class="btn btn-primary"
-                    id='nextButton'
-                    onclick='nextPage()'
-                    style="margin:10px 10px 10px 10px;
-                    padding: 5px 15px 5px 15px; width: 120px;
-                    text-transform:none !important;"
-                >
-                Next Page</button>
-            </span>
-            <span id="indexer" style="font-family: SAir; font-size: 14px;"></span>
-        </div>
-    </tbody>
-</table>
-</div>
-</div>
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        <li class="page-item">
+            <button class="page-link" id='previousButton' onclick='previousPage()'>
+                Prev
+            </button>
+        </li>
+        <li class="page-item w-25"><span id="indexer" class="page-link text-center"></span></li>
+        <li class="page-item">
+            <button class="page-link" id="nextButton" onclick="nextPage()">
+                Next
+            </button>
+        </li>
+    </ul>
+  </nav>
