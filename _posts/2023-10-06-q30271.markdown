@@ -106,12 +106,12 @@ ll solve() {
 		dp[i][0] = dp[i][1] = ret[i - 1] + T; // 초기화: T를 더하여 최대값으로 만들어줍니다
 		ll cost = 0, S = 0;
 		for (int j = i; j > 0; --j) { // 왼쪽으로 밀어가면서 비용을 계산해나갑니다
-			cost += (S += A[j]) * (D[j] - D[j - 1]); // 왼쪽으로 밀어 합치는 비용을 amortized O(1)로 계산합니다
+			cost += (S += A[j]) * (D[j] - D[j - 1]); // 왼쪽으로 밀어 합치는 비용을 O(1)로 계산합니다
 			dp[i][0] = std::min(dp[i][0], dp[j - 1][1] + cost); // 위에서 설명한 점화식과 같습니다
 		}
 		cost = 0, S = 0;
 		for (int j = i - 1; j > 0; --j) { // 오른쪽으로 당겨오는 비용을 계산합니다
-			cost += (ll)A[j] * (D[i] - D[j]); // 이것 또한 누적합을 amortized O(1)로 계산합니다
+			cost += (ll)A[j] * (D[i] - D[j]); // 이것 또한 누적합을 O(1)로 계산합니다
 			dp[i][1] = std::min(dp[i][1], ret[j - 1] + cost + T); // 위에서 설명한 점화식과 같습니다
 		}
 		ret[i] = std::min(dp[i][0], dp[i][1]);
