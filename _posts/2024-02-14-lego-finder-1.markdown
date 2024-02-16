@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Lego BrickFinder 만들기 - 1. 이미지 분류 연습"
-date:   2024-02-13 21:00:00 +0900
+date:   2024-02-14 21:00:00 +0900
 categories: devlog daily
 use_math: true
 ---
