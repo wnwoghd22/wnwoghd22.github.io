@@ -56,8 +56,8 @@ int main() {
 std::vector<Pos> P, H;
 
 int main() {
-	...
-	monotone_chain(P, H);
+    ...
+    monotone_chain(P, H);
 
     ll ret = 0;
     for (int i = 0; i < M; ++i) {
