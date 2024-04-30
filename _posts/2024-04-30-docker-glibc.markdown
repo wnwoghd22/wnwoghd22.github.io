@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Rust 도커 컨테이너, glibc 문제"
-date:   2024-03-26 16:00:00 +0900
+date:   2024-04-30 22:00:00 +0900
 categories: devlog daily
 use_math: true
 ---
