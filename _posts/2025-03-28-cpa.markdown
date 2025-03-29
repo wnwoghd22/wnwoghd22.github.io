@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "3월 28일 넋두리"
-date:   2025-03-128 11:00:00 +0900
+date:   2025-03-28 11:00:00 +0900
 categories: daily
 use_math: true
 ---
