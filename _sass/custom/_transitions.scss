@@ -1,0 +1,28 @@
+/* Simple slide-in/out transitions for main content */
+
+.content-anim {
+  will-change: transform, opacity;
+  transition: transform 350ms cubic-bezier(.2,.8,.2,1), opacity 300ms ease;
+  transform: translateY(6px);
+  opacity: 0;
+}
+
+.content-anim.enter {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.content-anim.exit {
+  transform: translateY(-8px);
+  opacity: 0;
+}
+
+/* Slightly stronger effect for lists */
+.post-list.content-anim,
+.paginator-center.content-anim {
+  transition: transform 320ms cubic-bezier(.2,.8,.2,1), opacity 280ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .content-anim { transition: none !important; transform: none !important; opacity: 1 !important; }
+}
