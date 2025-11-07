@@ -1,12 +1,21 @@
 
 {%- if site.posts.size > 0 -%}
-    <h2 class="post-list-heading">{{ page.list_title | default: "Posts" }}</h2>
-    <ul class="post-list">
-        {%- for post in site.posts -%}
+    <div class="paginator-grid">
+        <div class="paginator-col paginator-left">
+            <button class="paginator-button" id="previousButton" onclick="previousPage()" aria-label="Previous page">&lsaquo;</button>
+        </div>
 
-            {%- include homeList/element.html -%}
+        <div class="paginator-col paginator-center">
+            <ul class="post-list">
+                {%- for post in site.posts -%}
+                    {%- include homeList/element.html -%}
+                {%- endfor -%}
+            </ul>
+        </div>
 
-        {%- endfor -%}
-    </ul>
-    {%- include homeList/paginator.html -%}
-    {%- endif -%}
+        <div class="paginator-col paginator-right">
+            <button class="paginator-button" id="nextButton" onclick="nextPage()" aria-label="Next page">&rsaquo;</button>
+        </div>
+    </div>
+
+{%- endif -%}

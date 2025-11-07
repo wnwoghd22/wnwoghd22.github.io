@@ -1,12 +1,17 @@
 <li class="post-item {{post.categories|join:' '}}">
     {%- assign date_format = site.minima.date_format | default: "%b %-d, %Y" -%}
-    <span class="post-meta">{{ post.date | date: date_format }}</span>
-    <h3>
-        <a class="post-link text-decoration-none" href="{{ post.url | relative_url }}">
-        {{ post.title | escape }}
-        </a>
-    </h3>
-    {%- if site.show_excerpts -%}
-        {{ post.excerpt }}
-    {%- endif -%}
+    <div class="post-item-row">
+        <div class="post-item-main">
+            <h3 class="post-item-title">
+                <a class="post-link text-decoration-none" href="{{ post.url | relative_url }}">{{ post.title | escape }}</a>
+            </h3>
+            {%- if site.show_excerpts -%}
+                <div class="post-item-excerpt">{{ post.excerpt }}</div>
+            {%- endif -%}
+        </div>
+
+        <div class="post-item-date text-muted">
+            <time datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: date_format }}</time>
+        </div>
+    </div>
 </li>
