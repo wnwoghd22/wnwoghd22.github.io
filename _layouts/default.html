@@ -5,22 +5,15 @@
 
   <body>
 
-    {%- include header.html -%}
+    {%- comment -%} Header removed — using left sidebar for navigation and links {%- endcomment -%}
     <main class="container page-content w-100" aria-label="Content">
       <div class="row">
-        <div class="col-2 d-md-block d-none text-left">
-          <ul class="sidebar list-unstyled p-0 m-0">
-            <h5>Categories</h5>
-            <li><a class="text-decoration-none" href="/">All</a></li>
-            {% for category in site.categories %}
-              <li><a class="text-decoration-none" href="/?category={{category | first}}">{{ category | first}}</a></li>
-            {% endfor %} 
-          </ul>
-        </div>
-        <div class="col-8 wrapper">
+        <aside class="col-12 col-md-3 text-left">
+          {%- include sidebar/container.html -%}
+        </aside>
+        <div class="col-12 col-md-9 wrapper">
           {{ content }}
         </div>
-        <div class="col-2"></div>
       </div>
     </main>
 
