@@ -11,5 +11,30 @@
                 </li>
             {% endfor %}
         </ul>
+        <div class="sidebar-social mt-3">
+            <ul class="list-unstyled d-flex gap-2 p-0 m-0">
+                {%- if site.github_username -%}
+                <li>
+                    <a class="text-decoration-none" href="https://github.com/{{ site.github_username | cgi_escape | escape }}" aria-label="GitHub">
+                        <svg class="svg-icon" width="20" height="20"><use xlink:href="{{ '/assets/minima-social-icons.svg#github' | relative_url }}"></use></svg>
+                    </a>
+                </li>
+                {%- endif -%}
+                {%- if site.instagram_username -%}
+                <li>
+                    <a class="text-decoration-none" href="https://instagram.com/{{ site.instagram_username | cgi_escape | escape }}" aria-label="Instagram">
+                        <svg class="svg-icon" width="20" height="20"><use xlink:href="{{ '/assets/minima-social-icons.svg#instagram' | relative_url }}"></use></svg>
+                    </a>
+                </li>
+                {%- endif -%}
+                {%- if site.youtube_username or site.youtube_channel -%}
+                <li>
+                    <a class="text-decoration-none" href="{%- if site.youtube_channel -%}https://youtube.com/channel/{{ site.youtube_channel[0] | cgi_escape | escape }}{%- else -%}https://youtube.com/{{ site.youtube_username | cgi_escape | escape }}{%- endif -%}" aria-label="YouTube">
+                        <svg class="svg-icon" width="20" height="20"><use xlink:href="{{ '/assets/minima-social-icons.svg#youtube' | relative_url }}"></use></svg>
+                    </a>
+                </li>
+                {%- endif -%}
+            </ul>
+        </div>
     </div>
 </nav>
