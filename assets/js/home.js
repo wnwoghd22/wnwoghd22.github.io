@@ -25,9 +25,6 @@ setIndexByElement = n => {
     for(let i = n * page_length; i < Math.min((n + 1) * page_length, items.length); ++i) {
         items[i].style.display = 'block';
     }
-
-    let postion = document.getElementById('indexer');
-    postion.innerText= String(index+1) + "/" + String(page_num);
 }
 
 SetCategory = c => {
