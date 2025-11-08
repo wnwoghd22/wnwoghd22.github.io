@@ -2,7 +2,7 @@
 layout: post
 title:  "백준 12670 - The Year of Code Jam"
 date:   2023-12-09 12:00:00 +0900
-categories: algorithm
+categories: ps
 use_math: true
 ---
 

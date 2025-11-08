@@ -2,7 +2,7 @@
 layout: post
 title:  "백준 18252 - 별이 빛나는 밤에"
 date:   2024-02-29 15:00:00 +0900
-categories: algorithm datastructure
+categories: ps
 use_math: true
 ---
 

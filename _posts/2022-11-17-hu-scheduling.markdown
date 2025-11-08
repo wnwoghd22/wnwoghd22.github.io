@@ -2,7 +2,7 @@
 layout: post
 title:  "아무도 못 푼 문제 - 작업공정"
 date:   2022-11-17 17:00:00 +0900
-categories: algorithm
+categories: ps
 use_math: true
 ---
 

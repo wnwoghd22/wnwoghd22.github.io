@@ -2,7 +2,7 @@
 layout: post
 title:  "코딩테스트 - 더 맵게"
 date:   2022-06-28 23:00:00 +0900
-categories: algorithm daily
+categories: ps
 ---
 
 저번엔 이분탐색을 활용한 문제를 살펴봤습니다. 이번엔 힙(Heap) 문제를 보죠.

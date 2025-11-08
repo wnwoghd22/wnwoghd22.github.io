@@ -1,0 +1,144 @@
+/* Paginator and post-list styles */
+
+.paginator-grid {
+  display: grid;
+  grid-template-columns: 64px 1fr 64px;
+  gap: 1rem;
+  align-items: start;
+  margin-bottom: 1rem;
+}
+
+.paginator-col {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.paginator-button {
+  background: transparent;
+  border: none;
+  font-size: 28px;
+  line-height: 1;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+}
+
+.paginator-button:focus {
+  outline: 2px solid rgba(0,0,0,0.1);
+}
+
+.paginator-center .indexer-wrap {
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.paginator-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  background: $background-color;
+  position: relative;
+  z-index: 40;
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+
+.paginator-header .post-list-heading { margin: 0; }
+
+.post-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.post-item {
+  display: none;
+  padding: 0.75rem 0;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+.post-item-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.post-item-main {
+  flex: 1 1 auto;
+}
+
+.post-item-date {
+  flex: 0 0 120px;
+  text-align: right;
+  font-size: 0.9rem;
+  color: $grey-color;
+}
+
+@media (max-width: 767px) {
+  .paginator-grid {
+    grid-template-columns: 1fr;
+  }
+  .paginator-col.paginator-left,
+  .paginator-col.paginator-right {
+    order: 2;
+  }
+  .paginator-center { order: 1; }
+  .post-item-row { flex-direction: column; align-items: stretch; }
+  .post-item-date { text-align: left; flex-basis: auto; }
+}
+
+@media (min-width: 768px) {
+  /* When buttons are fixed, don't reserve grid columns for them; let center use full width */
+  .paginator-grid {
+    grid-template-columns: 1fr;
+  }
+  /* Make the left/right paginator columns fixed and vertically centered */
+  .paginator-col.paginator-left,
+  .paginator-col.paginator-right {
+    position: fixed;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 30;
+    width: 72px; /* reserve space for the button */
+    height: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Move the left button to the right of the fixed sidebar
+    sidebar: left 1rem, width 220px -> place button at sidebar + gap */
+  .paginator-col.paginator-left { left: calc(1rem + 220px + 8px); }
+  .paginator-col.paginator-right { right: 1rem; }
+
+  .paginator-button {
+    width: 64px;
+    height: 140px; /* tall vertical button */
+    font-size: 34px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+  }
+
+  /* Ensure central content does not underlap the fixed buttons.
+     The page content already accounts for the sidebar via `.content-with-sidebar`,
+     so here we only add a small padding inside the center area. */
+  .paginator-center {
+    margin-left: 0;
+    margin-right: 0;
+    box-sizing: border-box;
+    /* Reserve only the fixed button width + gap (sidebar offset is handled by .content-with-sidebar) */
+    padding-left: calc(72px + 16px);
+    padding-right: calc(72px + 16px);
+  }
+  /* Make header fixed relative to viewport on desktop and add top padding to center for overlap */
+  .paginator-header {
+    position: fixed;
+    left: calc(1rem + 260px + 16px); /* content-with-sidebar margin-left (260px) + small gap */
+    right: calc(96px + 16px); /* reserve space for right button area */
+  }
+
+  /* no top padding for paginator-center; header is fixed but we won't add extra top padding here */
+}

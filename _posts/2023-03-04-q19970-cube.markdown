@@ -2,7 +2,7 @@
 layout: post
 title:  "아무도 못 푼 문제 - Cube"
 date:   2023-03-04 20:00:00 +0900
-categories: algorithm
+categories: ps
 use_math: true
 ---
 

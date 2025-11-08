@@ -162,6 +162,12 @@ code {
   background-color: #eef;
 }
 
+/* Render tab characters as 4 spaces in code blocks */
+pre, code {
+  -moz-tab-size: 4;
+  tab-size: 4;
+}
+
 code {
   padding: 1px 5px;
 }

@@ -2,7 +2,7 @@
 layout: post
 title:  "희소배열과 O(1) 쿼리"
 date:   2025-10-09 00:00:00 +0900
-categories: algorithm datastructure
+categories: datastructure
 use_math: true
 ---
 

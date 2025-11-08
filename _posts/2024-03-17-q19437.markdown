@@ -2,7 +2,7 @@
 layout: post
 title:  "백준 19437 - Fantasia"
 date:   2024-03-17 18:00:00 +0900
-categories: algorithm datastructure
+categories: ps
 use_math: true
 ---
 

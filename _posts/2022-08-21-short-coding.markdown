@@ -2,7 +2,7 @@
 layout: post
 title:  "공 포장하기"
 date:   2022-08-21 16:00:00 +0900
-categories: algorithm
+categories: ps
 ---
 
 이번에 리뷰해볼 문제는 [공 포장하기][problem]입니다.

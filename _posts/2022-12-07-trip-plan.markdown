@@ -2,7 +2,7 @@
 layout: post
 title:  "백준 26157 - 즉흥 여행(Hard)"
 date:   2022-12-07 16:00:00 +0900
-categories: algorithm
+categories: ps
 use_math: true
 ---
 

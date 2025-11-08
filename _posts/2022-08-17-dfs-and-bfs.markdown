@@ -2,7 +2,7 @@
 layout: post
 title:  "DFS와 BFS"
 date:   2022-08-17 12:00:00 +0900
-categories: algorithm daily
+categories: algorithm
 ---
 
 이번에 리뷰해볼 문제는 순회입니다. 그중에서도 [DFS와 BFS][problem]를 동시에 구현하는 걸로 가져왔습니다.

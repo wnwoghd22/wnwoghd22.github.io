@@ -1,0 +1,40 @@
+/* Robust, layout-safe transitions for main content
+   - Transition only transform and opacity to avoid layout reflow issues
+   - Use will-change for hinting
+   - Provide slightly different timings for lists vs single content
+*/
+
+.content-anim {
+  will-change: transform, opacity;
+  /* initial state: slightly shifted and invisible */
+  transform: translateY(6px);
+  opacity: 0;
+  /* base transition ensures transition properties exist before class changes */
+  transition: transform 320ms cubic-bezier(.2,.9,.2,1), opacity 280ms ease;
+}
+
+/* Enter state (visible) */
+.content-anim.enter {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+/* Exit state (leaves upward, fades out) */
+.content-anim.exit {
+  transform: translateY(-8px);
+  opacity: 0;
+}
+
+/* Slightly stronger/shorter effect for lists / paginated centers */
+.post-list.content-anim,
+.paginator-center.content-anim {
+  transition: transform 300ms cubic-bezier(.2,.9,.2,1), opacity 260ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .content-anim {
+    transition: none !important;
+    transform: none !important;
+    opacity: 1 !important;
+  }
+}
