@@ -12,10 +12,25 @@ comments: true
       </time>
       {%- if page.author -%}
         • <span itemprop="author" itemscope itemtype="http://schema.org/Person"><span class="p-author h-card" itemprop="name">{{ page.author }}</span></span>
-      {%- endif -%}</p>
+      {%- endif -%}
       {% if page.use_math %}
-    <script type="text/javascript" id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
-    {% endif %}
+      <script>
+        window.MathJax = {
+          tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],      // inline: $...$ 와 \( ... \)
+            displayMath: [['$$','$$'], ['\\[','\\]']],    // display: $$...$$ 와 \[ ... \]
+            processEscapes: true,                         // \$ 같은 이스케이프 허용
+            tags: 'ams'                                   // \tag 등 AMS 태그 사용
+          },
+          options: {
+            skipHtmlTags: ['script','noscript','style','textarea','pre','code'] // 필요시 조정
+          }
+        };
+    </script>
+  <script type="text/javascript" id="MathJax-script" async
+          src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+      {% endif %}
+    </p>
   </header>
 
   <div class="post-content e-content" itemprop="articleBody">
