@@ -2,7 +2,7 @@
 layout: post
 title:  "성균관대학교 프로그래밍 경진대회 Open Contest 2023"
 date:   2023-03-04 22:00:00 +0900
-categories: algorithm
+categories: ps
 use_math: true
 ---
 

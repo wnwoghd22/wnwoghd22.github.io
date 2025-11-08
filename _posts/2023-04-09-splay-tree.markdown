@@ -2,7 +2,7 @@
 layout: post
 title:  "Splay Tree"
 date:   2023-04-09 22:00:00 +0900
-categories: algorithm datastructure
+categories: datastructure
 use_math: true
 ---
 

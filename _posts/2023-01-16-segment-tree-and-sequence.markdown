@@ -2,7 +2,7 @@
 layout: post
 title:  "백준 17353 - 하늘에서 떨어지는 1, 2, ..., R-L+1개의 별"
 date:   2023-01-16 20:00:00 +0900
-categories: algorithm
+categories: ps
 use_math: true
 ---
 

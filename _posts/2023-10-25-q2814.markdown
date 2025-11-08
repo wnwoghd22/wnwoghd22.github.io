@@ -2,7 +2,7 @@
 layout: post
 title:  "백준2814 - 최소인수"
 date:   2023-10-25 21:00:00 +0900
-categories: algorithm
+categories: ps
 use_math: true
 ---
 

@@ -2,7 +2,7 @@
 layout: post
 title:  "코딩테스트 - 부분합"
 date:   2022-07-03 12:00:00 +0900
-categories: algorithm daily
+categories: ps
 use_math: true
 ---
 

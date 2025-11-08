@@ -2,7 +2,7 @@
 layout: post
 title:  "방사형 그래프"
 date:   2022-09-10 16:00:00 +0900
-categories: algorithm
+categories: ps
 use_math: true
 ---
 

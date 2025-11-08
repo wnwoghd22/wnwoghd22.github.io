@@ -2,7 +2,7 @@
 layout: post
 title:  "백준 16357 - Circuits"
 date:   2023-01-10 20:00:00 +0900
-categories: algorithm
+categories: ps
 use_math: true
 ---
 

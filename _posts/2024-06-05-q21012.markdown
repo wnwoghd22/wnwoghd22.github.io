@@ -2,7 +2,7 @@
 layout: post
 title:  "백준 21012 - Project Team"
 date:   2024-06-05 21:30:00 +0900
-categories: algorithm datastructure
+categories: ps
 use_math: true
 ---
 

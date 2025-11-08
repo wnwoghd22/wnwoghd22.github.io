@@ -2,7 +2,7 @@
 layout: post
 title:  "백준 11743 - Iceberg Orders"
 date:   2024-03-26 17:00:00 +0900
-categories: algorithm datastructure
+categories: ps
 use_math: true
 ---
 

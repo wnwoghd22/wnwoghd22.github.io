@@ -2,7 +2,7 @@
 layout: post
 title:  "백준 이분매칭 - 열혈강호 시리즈 1 ~ 4"
 date:   2022-11-17 17:00:00 +0900
-categories: algorithm
+categories: ps
 use_math: true
 ---
 

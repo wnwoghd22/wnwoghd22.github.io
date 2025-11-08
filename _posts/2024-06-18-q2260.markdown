@@ -2,7 +2,7 @@
 layout: post
 title:  "백준 2260 - 핵폭탄"
 date:   2024-06-18 12:30:00 +0900
-categories: algorithm datastructure
+categories: ps
 use_math: true
 ---
 
